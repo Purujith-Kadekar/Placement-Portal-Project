@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Company Student Application</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+
+<body>
+    <div id="main" class="container">
+        <div class="canvas-2 p-5">
+            <div>
+                <h3>Student Application</h3><br>
+                <div class="student-head">
+                    <div class="student-info">
+                        <p class="mb-2">Student Name: {{student_name}}</p>
+                        <p class="mb-2">Department: {{student.department}}</p>
+                    </div>
+                    <img src="/static/student-pfp/{{student.pfp}}" alt="Student PFP" class="student-photo1">
+                </div>
+                <p>Drive: {{application.drive.name}}</p>
+                <p>Job Title: {{application.drive.title}}</p>
+            </div>
+            <form action="/company/{{ company_id }}/sapp_details/{{ application.id }}" method="post">
+                <div class="mb-3 row">
+                    <label for="interview" class="col-sm-3">Interview Mode</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="interview" name="interview"
+                            placeholder="e.g., Online, In-person">
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="remarks" class="col-sm-3">Remarks</label>
+                    <div class="col-sm-7">
+                        <textarea class="form-control" id="text-area" rows="3" name="remarks"
+                            placeholder="Enter remarks about the student"></textarea>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <a class="btn btn-primary" href="/static/resumes/{{ application.student.resume }}"
+                        role="button">View Resume</a>
+                    <select class="form-select w-25" aria-label="Default select example" name="status">
+                        <option disabled selected>Select Status</option>
+                        <option value="select">Selected</option>
+                        <option value="shortlist">Shortlist</option>
+                        <option value="waiting">Waiting</option>
+                        <option value="reject">Reject</option>
+                    </select>
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <a class="btn btn-primary" href="/company/{{ company_id }}/drive_app/{{drive_id}}" role="button">Go
+                        Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

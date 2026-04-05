@@ -1,0 +1,330 @@
+/* Admin-Seacrh */
+.search-lg{
+  width: 500px;
+  margin-left: 100px;
+}
+
+/* login */
+#form{
+  width:450px;
+  margin: auto;
+  border:2px solid grey;
+  /* margin-top:200px; */
+  border-radius:35px;
+  min-height: 50vh; 
+  position: relative;
+  top: 50vh;
+  transform: translateY(-50%);
+}
+
+/* Register */
+#form1{
+  width:450px;
+  margin: auto;
+  border:2px solid grey;
+  /* margin-top:250px; */
+  border-radius:35px;
+  min-height: 30vh; 
+  position: relative;
+  top: 50vh;
+  transform: translateY(-50%);
+}
+
+/* Student Register Form */
+#form2{
+  width:450px;
+  /* height:400px; */
+  margin: auto;
+  border:2px solid grey;
+  margin-top:10px;
+  border-radius:35px;
+}
+
+/* Company Register Form  */
+#form3{
+  width:510px;
+  margin: auto;
+  border:2px solid grey;
+  margin-top:10px;
+  border-radius:35px;
+}
+
+/* drive_admin drive_student drive_student_details */
+.canvas{
+  width:40%;
+  margin: auto;
+  /* margin-top: 200px; */
+  border:3px solid black;
+  border-radius: 5px;
+  min-height: 50vh; 
+  position: relative;
+  top: 50vh;
+  transform: translateY(-50%);
+}
+
+/* error.html */
+.canvasdp{
+  width:450px;
+  margin: auto;
+  border:2px solid grey;
+  border-radius:35px;
+  margin-top: 10px;
+}
+
+/* drive_update */
+.canvas-1{
+    width:40%;
+    min-height:450px;
+    margin: 125px auto;
+    /* margin-top: 125px; */
+    border:3px solid black;
+    border-radius: 5px;
+}
+
+/* student-dash sapp_company */
+.canvas-2{
+  width:65%;
+  margin: auto;
+  /* margin-top: 130px; */
+  border:3px solid black;
+  border-radius: 5px;
+  min-height: 50vh; 
+  position: relative;
+  top: 50vh;
+  transform: translateY(-50%);
+}
+
+/* comp_details */
+.canvas3{
+  width:47%;
+  margin: auto;
+  /* margin-top: 200px; */
+  border:3px solid black;
+  border-radius: 5px;
+  min-height: 50vh; 
+  position: relative;
+  top: 50vh;
+  transform: translateY(-50%);
+}
+
+/* student_dash */
+.canvas4{
+  width:55%;
+  margin: auto;
+  /* margin-top: 125px; */
+  border:3px solid black;
+  border-radius: 5px;
+  min-height: 50vh; 
+  position: relative;
+  top: 50vh;
+  transform: translateY(-50%);   
+}
+
+/* Admin */
+.canvas5{
+  width:82%;
+  margin: auto;
+  margin-top: -20px;
+  border:3px solid black;
+  border-radius: 5px;
+}
+
+/* Admin */
+.canvas5-1{
+  width:84%;
+  margin: auto;
+  margin-top: 20px;
+  border:1.6px solid grey;
+  border-radius: 5px;
+}
+
+/* Admin */
+.canvas5-2{
+  width:87%;
+  margin: auto;
+  margin-top: 20px;
+  border:1.6px solid grey;
+  border-radius: 5px;
+}
+
+/* sapp_history sapp_history_details  */
+.canvas6{
+  width:57%;
+  margin: auto;
+  /* margin-top: 200px; */
+  border:3px solid black;
+  border-radius: 5px;
+  min-height: 50vh; 
+  position: relative;
+  top: 50vh;
+  transform: translateY(-50%);
+}
+
+/* drive_admin drive_student sapp_admin*/
+#title-row{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* sapp_admin sapp_company */
+.student-head{
+  position: relative;
+}
+
+/* sapp_admin */
+.student-photo{
+  border: 2px solid black;
+  position: absolute;
+  right: 0px;
+  top: 0;
+  width: 100px;
+  height: 100px;
+}
+
+/* sapp_company */
+.student-photo1{
+  border: 1px solid black;
+  position: absolute;
+  right: 40px;
+  top: 0;
+  width: 100px;
+  height: 100px;
+}
+
+/* sapp_company  */
+.company-head{
+  position: relative;
+  min-height: 50px;
+  width: 300px;
+  padding-right: 100px;
+}
+
+/* sapp_company  */
+.company-logo{
+  position: absolute;
+  right: -100px;
+  top: 0;
+  width: 100px;
+  height: auto;
+}
+
+/* drive_comp */
+.form-control{
+  box-shadow: 0 0 2px black;
+}
+
+/* drive_comp */
+.right-align{
+  text-align: right;
+}
+
+/* sapp_comp */
+.leftalign{
+  margin-left: 420px;
+}
+
+/* sapp_comp */
+.canvas2{
+  width:50%;
+    margin: auto;
+    /* margin-top: 200px; */
+    border:3px solid black;
+    border-radius: 5px;
+}
+
+/* sapp_comp */
+.title-row{
+  display: flex;
+  gap : 200px;
+}
+
+/* comp_details */
+.navbar-nav{
+  margin-left: 180px;
+}
+
+/* comp_details */
+.drive{
+  border: 2px solid black;
+  width: auto;
+}
+
+/* comp_details */
+.driveb{
+  border: 2px solid gray;
+  width: 98%;
+  min-height: 50px;
+  margin: auto;
+  align-items: center;
+  color: rgb(68, 68, 68);
+}
+
+/* comp_details */
+.drive-row:nth-child(odd) .driveb{
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* drive_app */
+.app-row:nth-child(odd) .drive{
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* student_dash */
+.company{
+  border: 2px solid black;
+  width: 100%;
+}
+
+/* student_dash */
+.companyb{
+  border: 2px solid gray;
+  width: 98%;
+  min-height: 50px;
+  height: 35px;
+  margin: auto;
+  align-items: center;
+  color: rgb(68, 68, 68);
+}
+
+/* student_dash */
+.company-row:nth-child(odd) .companyb{
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* student_dash */
+.nav{
+  margin-left: 200px;
+}
+
+/* comp_dash */
+.cdrive{
+  border: 2px solid black;
+  width: 100%;
+}
+
+/* comp_dash */
+.cdriveb{
+  border: 2px solid gray;
+  width: 98%;
+  min-height: 50px;
+  height: 35px;
+  margin: auto;
+  align-items: center;
+  color: rgb(68, 68, 68);
+}
+
+/* all */
+a:hover {
+  color: hotpink;
+  text-decoration:solid;
+}
+
+
+/* #canvas{
+    width:60%;
+    height:700px;
+    margin: auto;
+    margin-top: 50px;
+    border:5px solid black;
+} */

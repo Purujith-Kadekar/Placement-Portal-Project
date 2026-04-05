@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Companies' Drive</title>
+</head>
+<link rel="stylesheet" href="/static/styles.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+<body>
+    <div id="mains">
+        <div class="canvas-1">
+            <div class="p-3">
+                <h3>Create a Drive</h3>
+            </div>
+            <form method="POST"> 
+                <!-- Input Boxes -->
+                <div class="px-5">  
+                    <!-- Drive Name -->
+                    <div class="mb-3 row">
+                        <label for="name" class="col-sm-4 col-form-label right-align">Drive Name</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter the Drive Name (e.g., Drive 1)">
+                        </div>
+                    </div>
+                    <!-- Job Title -->
+                    <div class="mb-3 row">
+                        <label for="job_title" class="col-sm-4 col-form-label right-align">Job Title</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="job_title" name="title" placeholder="Enter the Job Title (e.g., Software Engineer)">
+                        </div>
+                    </div>
+                    <!-- Job Discription -->
+                    <div class="mb-3 row">
+                        <label for="text-area" class="col-sm-4 col-form-label right-align">Job Description</label>
+                        <div class="col-sm-7">
+                            <textarea class="form-control" id="text-area" rows="3" name="description" placeholder="Enter the Job Description"></textarea>
+                        </div>
+                    </div>
+                    <!-- Eligiblity Criteria -->
+                    <div class="mb-3 row">
+                        <label for="eligibility" class="col-sm-4 col-form-label right-align">Eligibility Criteria</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="eligibility" name="eligibility" placeholder="Enter minimum CGPA (e.g., 8.5)">
+                        </div>
+                    </div>
+                    <!-- Salary -->
+                    <div class="mb-3 row">
+                        <label for="salary" class="col-sm-4 col-form-label right-align">Salary</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="salary" name="salary" placeholder="Enter the Salary (e.g., 50000)">
+                        </div>
+                    </div>
+                    <!-- Location -->
+                    <div class="mb-3 row">
+                        <label for="location" class="col-sm-4 col-form-label right-align">Location</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="location" name="location" placeholder="Enter the Location (e.g., Bangalore)">
+                        </div>
+                    </div>
+                    <!-- Application Deadline -->
+                    <div class="mb-3 row">
+                        <label for="deadline" class="col-sm-4 col-form-label right-align">Application Deadline</label>
+                        <div class="col-sm-7">
+                            <input type="date" class="form-control" id="deadline" name="deadline">
+                        </div>
+                    </div>
+                </div>  
+                <div class="text-end px-5 pb-3">
+                    <a href="/company/{{ company_id}}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div> 
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
