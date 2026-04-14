@@ -3,7 +3,7 @@ from flask import current_app as app #to avoid the circular import error, as we 
 from .models import * #as models is inside the applications folder
 from flask import session
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, date
 
 @app.errorhandler(404)
 def page_not_found(_):
@@ -123,7 +123,7 @@ def Register_Company():
         contact = request.form['hr_contact']
         website = request.form['website']
         overview = request.form['overview']
-        logo = request.files['logo']
+        logo = request.files.get('logo')
         hashed_password = generate_password_hash(password)
         # Create a new company
         if not Company.query.filter_by(email=email).first():
@@ -131,14 +131,16 @@ def Register_Company():
             db.session.add(company)
             db.session.flush()
             if logo and logo.filename != '':
-                if logo.filename.endswith(('.jpg')):
+                logo_name = logo.filename.lower()
+                if logo_name.endswith('.jpg'):
                     filename = f"{company.id}.jpg"
-                elif logo.filename.endswith(('.jpeg')):
+                elif logo_name.endswith('.jpeg'):
                     filename = f"{company.id}.jpeg"
-                elif logo.filename.endswith(('.png')):
+                elif logo_name.endswith('.png'):
                     filename = f"{company.id}.png"
                 else:
                     flash("Invalid file format. Please upload a jpg, jpeg, or png file.")
+                    return render_template('register_comp.html')
                 logo.save('static/comp-logo/' + filename)
                 company.logo = filename
             db.session.commit()
@@ -217,7 +219,7 @@ def admin_dashboard():
                 drive.status = "closed"
                 db.session.commit()
                 return redirect('/admin')
-        return render_template('admin_dash.html', drives=drives, companies=companies, students=students, applications=applications, approve_out=approve_out, dapprove_out=dapprove_out, total_students=total_students, total_companies=total_companies, total_applications=total_applications, total_drives=total_drives)
+        return render_template('admin/admin_dash.html', drives=drives, companies=companies, students=students, applications=applications, approve_out=approve_out, dapprove_out=dapprove_out, total_students=total_students, total_companies=total_companies, total_applications=total_applications, total_drives=total_drives)
     else:
         return redirect('/login')
 
@@ -227,7 +229,7 @@ def admin_search():
         query = request.args.get('search', '')
         students = Student.query.filter(Student.name.ilike(f"%{query}%")).all() #using get request, which when using this mehtod return a string and we are using ilike to search for the name of the student in the database, and we are using % to search for the name that contains the query string
         companies = Company.query.filter(Company.status == "approved", Company.name.ilike(f"%{query}%")).all()
-        return render_template('admin_dash.html', students=students, companies=companies,
+        return render_template('admin/admin_dash.html', students=students, companies=companies,
             drives=Drive.query.all(), applications=Application.query.all(),
             approve_out=Company.query.filter_by(status="pending").all(),
             dapprove_out=Drive.query.filter_by(status="pending").all(),
@@ -239,8 +241,10 @@ def admin_search():
 def Admin_Student_Details(student_id):
     if 'role' in session and session['role'] == 'admin':
         student = Student.query.get(student_id)
+        if not student:
+            return render_template('error.html'), 404
         applications = Application.query.filter_by(student_id=student_id).all()
-        return render_template('sapp_admin.html', student = student, student_name=student.name, applications=applications)
+        return render_template('admin/sapp_admin.html', student = student, student_name=student.name, applications=applications)
     else:
         return redirect('/login')
 
@@ -248,7 +252,9 @@ def Admin_Student_Details(student_id):
 def Admin_Drive_Details(drive_id):
     if 'role' in session and session['role'] == 'admin':
         drive = Drive.query.get(drive_id)
-        return render_template('drive_admin.html', drive=drive)
+        if not drive:
+            return render_template('error.html'), 404
+        return render_template('admin/drive_admin.html', drive=drive)
     else:
         return redirect('/login')
 
@@ -257,9 +263,11 @@ def Admin_Drive_Details(drive_id):
 def Student_Home(student_id):
     if 'role' in session and session['role'] == 'student' and session['student_id'] == student_id:
         student = Student.query.get(student_id)
+        if not student:
+            return redirect('/login')
         company = Company.query.filter(Company.blacklist==False, Company.status=="approved").all()
         applications = Application.query.filter_by(student_id=student_id).all()
-        return render_template('student_dash.html', student_name=student.name, companies=company, student_id=student.id, applications=applications)
+        return render_template('student/student_dash.html', student_name=student.name, companies=company, student_id=student.id, applications=applications)
     else:
         return redirect('/login')
 
@@ -267,7 +275,11 @@ def Student_Home(student_id):
 def Student_Drive_Details(student_id, drive_id):
     if 'role' in session and session['role'] == 'student' and session['student_id'] == student_id:
         drive = Drive.query.get(drive_id)
+        if not drive:
+            return render_template('error.html'), 404
         company = Company.query.get(drive.company_id)
+        if not company:
+            return render_template('error.html'), 404
         student = Student.query.filter_by(id=student_id).first()
         apply = request.form.get('apply')
         if apply:
@@ -291,7 +303,7 @@ def Student_Drive_Details(student_id, drive_id):
                 # return render_template('dbapply_error.html', student_id=student_id, company=company)
                 flash("Already applied to this drive")
                 return redirect(f'/student/{student.id}/comp_details/{company.id}')
-        return render_template('drive_student.html', drive=drive, company=company , student_id=student_id, drive_id=drive_id)
+        return render_template('student/drive_student.html', drive=drive, company=company , student_id=student_id, drive_id=drive_id)
     else:
         return redirect('/login')
 
@@ -299,9 +311,13 @@ def Student_Drive_Details(student_id, drive_id):
 def Drive_Details(student_id, drive_id):
     if 'role' in session and session['role'] == 'student' and session['student_id'] == student_id:
         drive = Drive.query.get(drive_id)
+        if not drive:
+            return render_template('error.html'), 404
         company = Company.query.get(drive.company_id)
+        if not company:
+            return render_template('error.html'), 404
         student = Student.query.filter_by(id=student_id).first()
-        return render_template('drive_student_details.html', drive=drive, company=company , student_id=student_id, drive_id=drive_id)
+        return render_template('student/drive_student_details.html', drive=drive, company=company , student_id=student_id, drive_id=drive_id)
     else:
         return redirect('/login')
 
@@ -309,8 +325,10 @@ def Drive_Details(student_id, drive_id):
 def Student_Apply(student_id, company_id):
     if 'role' in session and session['role'] == 'student' and session['student_id'] == student_id:
         company = Company.query.get(company_id)
+        if not company:
+            return render_template('error.html'), 404
         drives= Drive.query.filter(Drive.company_id==company_id, Drive.status=="approved").all()
-        return render_template('comp_details.html', drives=drives, company_name=company.name, student_id=student_id, company=company)
+        return render_template('student/comp_details.html', drives=drives, company_name=company.name, student_id=student_id, company=company)
     else:
         return redirect('/login')
 
@@ -318,8 +336,10 @@ def Student_Apply(student_id, company_id):
 def Student_Application_History(student_id):
     if 'role' in session and session['role'] == 'student' and session['student_id'] == student_id:
         student = Student.query.get(student_id)
+        if not student:
+            return redirect('/login')
         applications = Application.query.filter_by(student_id=student_id).all()
-        return render_template('Sapp_history.html', student=student, applications=applications)
+        return render_template('student/Sapp_history.html', student=student, applications=applications)
     else:
         return redirect('/login')
 
@@ -327,8 +347,10 @@ def Student_Application_History(student_id):
 def Student_Application_History_Company(student_id, company_id):
     if 'role' in session and session['role'] == 'student' and session['student_id'] == student_id:
         student = Student.query.get(student_id)
+        if not student:
+            return redirect('/login')
         applications = Application.query.filter_by(student_id=student_id).all()
-        return render_template('Sapp_history_comp.html', student=student, applications=applications, company_id=company_id)
+        return render_template('student/Sapp_history_comp.html', student=student, applications=applications, company_id=company_id)
     else:
         return redirect('/login')
 
@@ -344,29 +366,32 @@ def Student_Update(student_id):
             new_pass = request.form.get('pass')          
             if new_pass: 
                 student.password = generate_password_hash(new_pass)
-            resume = request.files['resume']
-            pfp = request.files['pfp']
+            resume = request.files.get('resume')
+            pfp = request.files.get('pfp')
             if resume and resume.filename != '':
-                if resume and resume.filename.endswith('.pdf'):
-                    filename = f"{student.id}.pdf"
-                    resume.save('static/resumes/' + filename)
-                    student.resume = filename
+                if resume.filename.lower().endswith('.pdf'):
+                    resume_filename = f"{student.id}.pdf"
+                    resume.save('static/resumes/' + resume_filename)
+                    student.resume = resume_filename
                 else:
                     flash("Invalid file format. Please upload a PDF file.")
+                    return render_template('student/student_update.html', student=student)
             if pfp and pfp.filename != '':
-                if pfp.filename.endswith(('.jpg')):
-                    filename = f"{student.id}.jpg"
-                elif pfp.filename.endswith(('.jpeg')):
-                    filename = f"{student.id}.jpeg"
-                elif pfp.filename.endswith(('.png')):
-                    filename = f"{student.id}.png"
+                pfp_name = pfp.filename.lower()
+                if pfp_name.endswith('.jpg'):
+                    pfp_filename = f"{student.id}.jpg"
+                elif pfp_name.endswith('.jpeg'):
+                    pfp_filename = f"{student.id}.jpeg"
+                elif pfp_name.endswith('.png'):
+                    pfp_filename = f"{student.id}.png"
                 else:
                     flash("Invalid file format. Please upload a jpg, jpeg, or png file.")
-                pfp.save('static/student-pfp/' + filename)
-                student.pfp = filename
+                    return render_template('student/student_update.html', student=student)
+                pfp.save('static/student-pfp/' + pfp_filename)
+                student.pfp = pfp_filename
             db.session.commit()
             return redirect(f'/student/{student_id}')
-        return render_template('student_update.html', student=student)
+        return render_template('student/student_update.html', student=student)
     else:
         return redirect('/login')
 
@@ -375,6 +400,8 @@ def Student_Update(student_id):
 def Company_Home(company_id):
     if 'role' in session and session['role'] == 'company' and session['company_id'] == company_id:
         company = Company.query.get(company_id)
+        if not company:
+            return redirect('/login')
         drives =Drive.query.filter_by(company_id=company_id).all()
         complete = request.form.get('complete')
         active = request.form.get('active')
@@ -390,7 +417,7 @@ def Company_Home(company_id):
                 drive.status = "pending"
                 db.session.commit()
                 return redirect(f'/company/{company_id}')
-        return render_template('comp_dash.html', company_name=company.name, company_id=company_id, drives=drives)
+        return render_template('company/comp_dash.html', company_name=company.name, company_id=company_id, drives=drives)
     else:
         return redirect('/login')
 
@@ -398,9 +425,11 @@ def Company_Home(company_id):
 def Drive_Applications(company_id, drive_id):
     if 'role' in session and session['role'] == 'company' and session['company_id'] == company_id:
         drive = Drive.query.get(drive_id)
+        if not drive or drive.company_id != company_id:
+            return redirect(f'/company/{company_id}')
         applications = Application.query.filter_by(drive_id=drive_id).all()
         student = Student.query.filter_by(id = drive_id).first()
-        return render_template('drive_app.html', drive=drive, applications=applications, company_id=company_id, student=student)
+        return render_template('company/drive_app.html', drive=drive, applications=applications, company_id=company_id, student=student)
     else:
         return redirect('/login')
 
@@ -420,7 +449,7 @@ def Create_Drive(company_id):
             db.session.add(drive)
             db.session.commit()
             return redirect(f'/company/{company_id}')
-        return render_template('drive_comp.html', company_id=company_id)
+        return render_template('company/drive_comp.html', company_id=company_id)
     else:
         return redirect('/login')
 
@@ -428,6 +457,8 @@ def Create_Drive(company_id):
 def Update_Drive(company_id, drive_id):
     if 'role' in session and session['role'] == 'company' and session['company_id'] == company_id:
         drive=Drive.query.get(drive_id)
+        if not drive or drive.company_id != company_id:
+            return redirect(f'/company/{company_id}')
         if request.method == 'POST':
             drive.title = request.form['title']
             drive.name = request.form['name']
@@ -440,7 +471,7 @@ def Update_Drive(company_id, drive_id):
             drive.deadline = deadline_date
             db.session.commit()
             return redirect(f'/company/{company_id}')
-        return render_template('drive_update.html', drive=drive, company_id=company_id)
+        return render_template('company/drive_update.html', drive=drive, company_id=company_id)
     else:
         return redirect('/login')
 
@@ -448,7 +479,11 @@ def Update_Drive(company_id, drive_id):
 def Company_Student_Details(application_id, company_id):
     if 'role' in session and session['role'] == 'company' and session['company_id'] == company_id:
         application = Application.query.get(application_id)
+        if not application or application.company_id != company_id:
+            return redirect(f'/company/{company_id}')
         student = Student.query.get(application.student_id)
+        if not student:
+            return redirect(f'/company/{company_id}')
         drive_id = application.drive_id
         status = request.form.get('status')
         interview = request.form.get('interview')
@@ -469,7 +504,7 @@ def Company_Student_Details(application_id, company_id):
                 application.status = "rejected"
             db.session.commit()
             return redirect(f'/company/{company_id}/drive_app/{drive_id}')
-        return render_template('sapp_comp.html', student = student, student_name=student.name, application=application, company_id=company_id, drive_id=drive_id)
+        return render_template('company/sapp_comp.html', student = student, student_name=student.name, application=application, company_id=company_id, drive_id=drive_id)
     else:
         return redirect('/login')
 
@@ -484,20 +519,22 @@ def Company_Update(company_id):
             new_pass = request.form.get('pass')
             if new_pass:
                 company.password = generate_password_hash(new_pass)
-            logo = request.files['logo']
+            logo = request.files.get('logo')
             if logo and logo.filename != '':
-                if logo.filename.endswith(('.jpg')):
+                logo_name = logo.filename.lower()
+                if logo_name.endswith('.jpg'):
                     filename = f"{company.id}.jpg"
-                elif logo.filename.endswith(('.jpeg')):
+                elif logo_name.endswith('.jpeg'):
                     filename = f"{company.id}.jpeg"
-                elif logo.filename.endswith(('.png')):
+                elif logo_name.endswith('.png'):
                     filename = f"{company.id}.png"
                 else:
                     flash("Invalid file format. Please upload a jpg, jpeg, or png file.")
+                    return render_template('company/comp_update.html', company=company)
                 logo.save('static/comp-logo/' + filename)
                 company.logo = filename
             db.session.commit()
             return redirect(f'/company/{company_id}')
-        return render_template('comp_update.html', company=company)
+        return render_template('company/comp_update.html', company=company)
     else:
         return redirect('/login')

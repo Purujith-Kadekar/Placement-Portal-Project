@@ -24,32 +24,36 @@ MAD1-project/
 │   ├── models.py                 # DB models (Admin, Student, Company, Drive, Application)
 │   └── controllers.py            # All route handlers
 ├── templates/                    # Jinja2 HTML templates
+│   ├── error.html
 │   ├── login.html
 │   ├── register.html
-│   ├── register_student.html
 │   ├── register_comp.html
-│   ├── admin_dash.html
-│   ├── student_dash.html
-│   ├── comp_dash.html
-│   ├── drive_student.html
-│   ├── drive_student_details.html
-│   ├── drive_comp.html
-│   ├── drive_update.html
-│   ├── drive_admin.html
-│   ├── drive_app.html
-│   ├── comp_details.html
-│   ├── comp_update.html
-│   ├── sapp_admin.html
-│   ├── sapp_comp.html
-│   ├── Sapp_history.html
-│   ├── Sapp_history_comp.html
-│   ├── student_update.html
-│   └── error.html
+│   ├── register_student.html
+│   ├── admin/
+│   │   ├── admin_dash.html
+│   │   ├── drive_admin.html
+│   │   └── sapp_admin.html
+│   ├── company/
+│   │   ├── comp_dash.html
+│   │   ├── comp_update.html
+│   │   ├── drive_app.html
+│   │   ├── drive_comp.html
+│   │   ├── drive_update.html
+│   │   └── sapp_comp.html
+│   └── student/
+│       ├── comp_details.html
+│       ├── drive_student.html
+│       ├── drive_student_details.html
+│       ├── Sapp_history.html
+│       ├── Sapp_history_comp.html
+│       ├── student_dash.html
+│       └── student_update.html
 ├── static/
 │   ├── styles.css
 │   ├── resumes/                  # Uploaded student resumes (.pdf)
 │   ├── student-pfp/              # Student profile pictures (.jpg/.jpeg/.png)
 │   └── comp-logo/                # Company logos (.jpg/.jpeg/.png)
+├── Project-Report.pdf
 └── instance/
     └── placement.sqlite3         # SQLite database file
 ```
