@@ -6,6 +6,8 @@ __pycache__/
 venv/
 ENV/
 
+private
+
 # Databases (Do not track live data)
 instance/
 *.sqlite3
