@@ -1,0 +1,19 @@
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# Databases (Do not track live data)
+instance/
+*.sqlite3
+
+# Uploaded Media (Keeps repository lightweight)
+static/resumes/*.pdf
+static/student-pfp/*
+static/comp-logo/*
+!static/resumes/.gitkeep
+!static/student-pfp/.gitkeep
+!static/comp-logo/.gitkeep
