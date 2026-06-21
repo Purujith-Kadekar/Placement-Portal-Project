@@ -31,11 +31,9 @@ def Login():
                     return render_template('login.html', error="Invalid email or password. Please try again.")
                 if student.blacklist:
                     return render_template('login.html', error="Your account has been blacklisted. Please contact the administrator.")
-                else:
-                    if student and check_password_hash(student.password, password) and not student.blacklist:
-                        session['role'] = 'student'
-                        session['student_id'] = student.id
-                        return redirect(f"/student/{student.id}")
+                session['role'] = 'student'
+                session['student_id'] = student.id
+                return redirect(f"/student/{student.id}")
             #Company Login
             company = Company.query.filter_by(email=email).first()
             if company:
@@ -47,11 +45,9 @@ def Login():
                     return render_template('login.html', error="Your registration is rejected. Please contact the administrator.")
                 if company.blacklist:
                     return render_template('login.html', error="Your account has been blacklisted. Please contact the administrator.")
-                else:
-                    if company and company.status == "approved" and check_password_hash(company.password, password):
-                        session['role'] = 'company'
-                        session['company_id'] = company.id
-                        return redirect(f"/company/{company.id}")
+                session['role'] = 'company'
+                session['company_id'] = company.id
+                return redirect(f"/company/{company.id}")
             elif not (company or student):
                 return render_template('login.html', error="User not found. Please register first.")
     return render_template('login.html')
@@ -428,7 +424,7 @@ def Drive_Applications(company_id, drive_id):
         if not drive or drive.company_id != company_id:
             return redirect(f'/company/{company_id}')
         applications = Application.query.filter_by(drive_id=drive_id).all()
-        student = Student.query.filter_by(id = drive_id).first()
+        student = Student.query.filter_by(id = application.student_id).first() if applications else None
         return render_template('company/drive_app.html', drive=drive, applications=applications, company_id=company_id, student=student)
     else:
         return redirect('/login')
@@ -515,6 +511,8 @@ def Company_Update(company_id):
         if request.method == 'POST':
             company.name = request.form['name']
             company.email = request.form['email']
+            company.contact = request.form['contact']
+            company.website = request.form['website']
             company.overview = request.form['overview']
             new_pass = request.form.get('pass')
             if new_pass:
